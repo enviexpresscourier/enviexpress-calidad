@@ -247,14 +247,6 @@
       font-size: 22px;
     }
 
-    .respuesta-guardada {
-      min-height: 22px;
-      margin-top: 18px;
-      color: #ed1c24;
-      font-size: 14px;
-      font-weight: 700;
-    }
-
     .volver {
       margin-top: 21px;
       border: none;
@@ -285,12 +277,16 @@
       transition: width 0.3s ease;
     }
 
-    .avance.paso-1 {
+    .paso-1 {
       width: 20%;
     }
 
-    .avance.paso-2 {
+    .paso-2 {
       width: 40%;
+    }
+
+    .paso-3 {
+      width: 60%;
     }
 
     .texto-progreso {
@@ -365,14 +361,13 @@
       <div class="simbolo">≋</div>
       <h1 class="marca">ENVIEXPRESS</h1>
       <div class="sistema">Sistema de Calidad</div>
-      <div class="moto" aria-label="Motorizado en moto lineal">🏍️</div>
+      <div class="moto">🏍️</div>
     </header>
 
     <section class="contenido">
 
       <!-- PANTALLA 1 -->
       <div id="pantalla1" class="pantalla activa">
-
         <h2 class="titulo">
           ¿Cómo fue la <span>atención</span> de nuestro motorizado?
         </h2>
@@ -404,12 +399,10 @@
           </div>
           <div class="texto-progreso">Pregunta 1 de 5</div>
         </div>
-
       </div>
 
       <!-- PANTALLA 2 -->
       <div id="pantalla2" class="pantalla">
-
         <h2 class="titulo">
           ¿El motorizado fue <span>amable y respetuoso</span>?
         </h2>
@@ -419,37 +412,21 @@
         </p>
 
         <div class="opciones">
-
-          <button
-            class="opcion"
-            type="button"
-            data-trato="SÍ"
-          >
+          <button class="opcion" type="button" data-trato="SÍ">
             <span class="icono-opcion">😊</span>
             Sí, fue amable
           </button>
 
-          <button
-            class="opcion"
-            type="button"
-            data-trato="REGULAR"
-          >
+          <button class="opcion" type="button" data-trato="REGULAR">
             <span class="icono-opcion">😐</span>
             La atención fue regular
           </button>
 
-          <button
-            class="opcion"
-            type="button"
-            data-trato="NO"
-          >
+          <button class="opcion" type="button" data-trato="NO">
             <span class="icono-opcion">😕</span>
             No fue amable
           </button>
-
         </div>
-
-        <div id="respuestaGuardada" class="respuesta-guardada"></div>
 
         <button id="volverPantalla1" class="volver" type="button">
           ← Cambiar mi calificación anterior
@@ -461,7 +438,40 @@
           </div>
           <div class="texto-progreso">Pregunta 2 de 5</div>
         </div>
+      </div>
 
+      <!-- PANTALLA 3 -->
+      <div id="pantalla3" class="pantalla">
+        <h2 class="titulo">
+          ¿Tu pedido llegó en <span>buen estado</span>?
+        </h2>
+
+        <p class="descripcion">
+          Queremos confirmar que tu paquete fue entregado correctamente.
+        </p>
+
+        <div class="opciones">
+          <button class="opcion" type="button" data-estado="SÍ">
+            <span class="icono-opcion">📦</span>
+            Sí, llegó en buen estado
+          </button>
+
+          <button class="opcion" type="button" data-estado="NO">
+            <span class="icono-opcion">⚠️</span>
+            No, presentó un inconveniente
+          </button>
+        </div>
+
+        <button id="volverPantalla2" class="volver" type="button">
+          ← Volver a la pregunta anterior
+        </button>
+
+        <div class="progreso">
+          <div class="barra">
+            <div class="avance paso-3"></div>
+          </div>
+          <div class="texto-progreso">Pregunta 3 de 5</div>
+        </div>
       </div>
 
     </section>
@@ -483,19 +493,23 @@
   <script>
     let calificacion = 0;
     let tratoAmable = '';
+    let pedidoBuenEstado = '';
 
     const pantalla1 = document.getElementById('pantalla1');
     const pantalla2 = document.getElementById('pantalla2');
+    const pantalla3 = document.getElementById('pantalla3');
 
     const estrellas = document.querySelectorAll('.estrella');
     const resultado = document.getElementById('resultado');
 
     const opcionesTrato = document.querySelectorAll('[data-trato]');
-    const respuestaGuardada =
-      document.getElementById('respuestaGuardada');
+    const opcionesEstado = document.querySelectorAll('[data-estado]');
 
     const volverPantalla1 =
       document.getElementById('volverPantalla1');
+
+    const volverPantalla2 =
+      document.getElementById('volverPantalla2');
 
     const mensajes = {
       1: {
@@ -526,7 +540,6 @@
 
         estrellas.forEach(item => {
           const valorItem = Number(item.dataset.valor);
-
           item.classList.remove('activa');
 
           if (valorItem <= calificacion) {
@@ -542,7 +555,7 @@
 
         setTimeout(() => {
           mostrarPantalla(pantalla2);
-        }, 750);
+        }, 700);
       });
     });
 
@@ -556,13 +569,30 @@
 
         opcion.classList.add('seleccionada');
 
-        respuestaGuardada.textContent =
-          '✓ Respuesta registrada. Pantalla 2 funcionando correctamente.';
+        setTimeout(() => {
+          mostrarPantalla(pantalla3);
+        }, 450);
+      });
+    });
+
+    opcionesEstado.forEach(opcion => {
+      opcion.addEventListener('click', () => {
+        pedidoBuenEstado = opcion.dataset.estado;
+
+        opcionesEstado.forEach(item => {
+          item.classList.remove('seleccionada');
+        });
+
+        opcion.classList.add('seleccionada');
       });
     });
 
     volverPantalla1.addEventListener('click', () => {
       mostrarPantalla(pantalla1);
+    });
+
+    volverPantalla2.addEventListener('click', () => {
+      mostrarPantalla(pantalla2);
     });
 
     function mostrarPantalla(pantallaSeleccionada) {
