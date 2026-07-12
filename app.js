@@ -1,3 +1,6 @@
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbw1aRDK4XutnDKpM_gXXCmn6b9BzNmTBy-x4jyqkBb83KHDOiE1o_Q7UVxZuMlnZx-1/exec";
+
 const respuestas = {
   codigoOrden: "",
   calificacion: 0,
@@ -9,30 +12,229 @@ const respuestas = {
 
 document.addEventListener("DOMContentLoaded", iniciarEncuesta);
 
-function iniciarEncuesta() {
+async function iniciarEncuesta() {
   obtenerCodigoOrden();
-  configurarEstrellas();
-  configurarTrato();
-  configurarEstadoPedido();
-  configurarMotivos();
-  configurarComentario();
-  configurarBotones();
-}
 
-function obtenerCodigoOrden() {
-  const parametros = new URLSearchParams(window.location.search);
-  respuestas.codigoOrden = parametros.get("id") || "PEDIDO DE PRUEBA";
+  if (!respuestas.codigoOrden) {
+    mostrarMensajePedido(
+      "Enlace incompleto",
+      "Este enlace no contiene el código del pedido."
+    );
+    return;
+  }
 
-  const codigoVisible = document.getElementById("codigoOrdenVisible");
+  mostrarMensajeCargando();
 
-  if (codigoVisible) {
-    codigoVisible.textContent = respuestas.codigoOrden;
+  try {
+    const resultado = await validarPedidoEnAPI(
+      respuestas.codigoOrden
+    );
+
+    if (!resultado || !resultado.valido) {
+      mostrarMensajePedido(
+        "Pedido no encontrado",
+        resultado?.mensaje ||
+          "No encontramos el pedido asociado a este enlace."
+      );
+      return;
+    }
+
+    respuestas.codigoOrden = resultado.codigoOrden;
+
+    const codigoVisible =
+      document.getElementById("codigoOrdenVisible");
+
+    if (codigoVisible) {
+      codigoVisible.textContent = resultado.codigoOrden;
+    }
+
+    restaurarEncuesta();
+    configurarEstrellas();
+    configurarTrato();
+    configurarEstadoPedido();
+    configurarMotivos();
+    configurarComentario();
+    configurarBotones();
+
+  } catch (error) {
+    mostrarMensajePedido(
+      "No pudimos cargar la encuesta",
+      "Revisa tu conexión e inténtalo nuevamente."
+    );
+
+    console.error(error);
   }
 }
 
+function obtenerCodigoOrden() {
+  const parametros = new URLSearchParams(
+    window.location.search
+  );
+
+  respuestas.codigoOrden =
+    (parametros.get("id") || "").trim();
+
+  const codigoVisible =
+    document.getElementById("codigoOrdenVisible");
+
+  if (codigoVisible) {
+    codigoVisible.textContent =
+      respuestas.codigoOrden || "Sin código";
+  }
+}
+
+function validarPedidoEnAPI(codigoOrden) {
+  return new Promise((resolve, reject) => {
+    const nombreCallback =
+      "respuestaEnviquality_" +
+      Date.now() +
+      "_" +
+      Math.floor(Math.random() * 100000);
+
+    const script = document.createElement("script");
+
+    const temporizador = setTimeout(() => {
+      limpiar();
+      reject(
+        new Error("La API tardó demasiado en responder.")
+      );
+    }, 12000);
+
+    function limpiar() {
+      clearTimeout(temporizador);
+      script.remove();
+
+      try {
+        delete window[nombreCallback];
+      } catch (error) {
+        window[nombreCallback] = undefined;
+      }
+    }
+
+    window[nombreCallback] = resultado => {
+      limpiar();
+      resolve(resultado);
+    };
+
+    script.onerror = () => {
+      limpiar();
+      reject(
+        new Error("No fue posible conectarse con la API.")
+      );
+    };
+
+    const parametros = new URLSearchParams({
+      action: "validar",
+      id: codigoOrden,
+      callback: nombreCallback
+    });
+
+    script.src = `${API_URL}?${parametros.toString()}`;
+
+    document.body.appendChild(script);
+  });
+}
+
+function mostrarMensajeCargando() {
+  const contenido = document.querySelector(".contenido");
+
+  if (!contenido) {
+    return;
+  }
+
+  contenido.dataset.contenidoOriginal =
+    contenido.innerHTML;
+
+  contenido.innerHTML = `
+    <div style="padding:45px 10px;text-align:center;">
+      <div style="
+        width:45px;
+        height:45px;
+        margin:0 auto 18px;
+        border:5px solid #eeeeee;
+        border-top-color:#ed1c24;
+        border-radius:50%;
+        animation:girar 0.8s linear infinite;
+      "></div>
+
+      <h2 style="margin:0 0 8px;">
+        Verificando tu pedido...
+      </h2>
+
+      <p style="margin:0;color:#6b6b6b;">
+        Esto tomará solo unos segundos.
+      </p>
+
+      <style>
+        @keyframes girar {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+      </style>
+    </div>
+  `;
+}
+
+function restaurarEncuesta() {
+  const contenido = document.querySelector(".contenido");
+
+  if (
+    contenido &&
+    contenido.dataset.contenidoOriginal
+  ) {
+    contenido.innerHTML =
+      contenido.dataset.contenidoOriginal;
+  }
+}
+
+function mostrarMensajePedido(titulo, mensaje) {
+  const contenido = document.querySelector(".contenido");
+
+  if (!contenido) {
+    return;
+  }
+
+  contenido.innerHTML = `
+    <div style="padding:38px 10px;text-align:center;">
+      <div style="
+        display:flex;
+        width:76px;
+        height:76px;
+        margin:0 auto 18px;
+        align-items:center;
+        justify-content:center;
+        border-radius:50%;
+        background:#fff1f1;
+        color:#ed1c24;
+        font-size:38px;
+        font-weight:900;
+      ">
+        !
+      </div>
+
+      <h2 style="margin:0 0 10px;color:#151515;">
+        ${escaparHTML(titulo)}
+      </h2>
+
+      <p style="
+        margin:0 auto;
+        max-width:330px;
+        color:#6b6b6b;
+        line-height:1.5;
+      ">
+        ${escaparHTML(mensaje)}
+      </p>
+    </div>
+  `;
+}
+
 function configurarEstrellas() {
-  const estrellas = document.querySelectorAll("[data-valor]");
-  const resultado = document.getElementById("resultado");
+  const estrellas =
+    document.querySelectorAll("[data-valor]");
+
+  const resultado =
+    document.getElementById("resultado");
 
   const mensajes = {
     1: {
@@ -59,10 +261,13 @@ function configurarEstrellas() {
 
   estrellas.forEach(estrella => {
     estrella.addEventListener("click", () => {
-      respuestas.calificacion = Number(estrella.dataset.valor);
+      respuestas.calificacion =
+        Number(estrella.dataset.valor);
 
       estrellas.forEach(item => {
-        const valorItem = Number(item.dataset.valor);
+        const valorItem =
+          Number(item.dataset.valor);
+
         item.classList.toggle(
           "activa",
           valorItem <= respuestas.calificacion
@@ -72,7 +277,9 @@ function configurarEstrellas() {
       if (resultado) {
         resultado.innerHTML = `
           ${mensajes[respuestas.calificacion].titulo}
-          <span>${mensajes[respuestas.calificacion].detalle}</span>
+          <span>
+            ${mensajes[respuestas.calificacion].detalle}
+          </span>
         `;
       }
 
@@ -84,11 +291,13 @@ function configurarEstrellas() {
 }
 
 function configurarTrato() {
-  const opciones = document.querySelectorAll("[data-trato]");
+  const opciones =
+    document.querySelectorAll("[data-trato]");
 
   opciones.forEach(opcion => {
     opcion.addEventListener("click", () => {
-      respuestas.tratoAmable = opcion.dataset.trato;
+      respuestas.tratoAmable =
+        opcion.dataset.trato;
 
       marcarSeleccionada(opciones, opcion);
 
@@ -100,11 +309,13 @@ function configurarTrato() {
 }
 
 function configurarEstadoPedido() {
-  const opciones = document.querySelectorAll("[data-estado]");
+  const opciones =
+    document.querySelectorAll("[data-estado]");
 
   opciones.forEach(opcion => {
     opcion.addEventListener("click", () => {
-      respuestas.pedidoBuenEstado = opcion.dataset.estado;
+      respuestas.pedidoBuenEstado =
+        opcion.dataset.estado;
 
       marcarSeleccionada(opciones, opcion);
 
@@ -133,36 +344,57 @@ function configurarMotivos() {
 }
 
 function configurarComentario() {
-  const comentario = document.getElementById("comentario");
-  const contador = document.getElementById("contadorComentario");
+  const comentario =
+    document.getElementById("comentario");
+
+  const contador =
+    document.getElementById("contadorComentario");
 
   if (!comentario) {
     return;
   }
 
   comentario.addEventListener("input", () => {
-    respuestas.comentario = comentario.value.trim();
+    respuestas.comentario =
+      comentario.value.trim();
 
     if (contador) {
-      contador.textContent = comentario.value.length;
+      contador.textContent =
+        comentario.value.length;
     }
   });
 }
 
 function configurarBotones() {
-  asignarPantalla("volverPantalla1", "pantalla1");
-  asignarPantalla("volverPantalla2", "pantalla2");
-  asignarPantalla("volverPantalla3", "pantalla3");
+  asignarPantalla(
+    "volverPantalla1",
+    "pantalla1"
+  );
 
-  const botonFinalizar = document.getElementById("botonFinalizar");
+  asignarPantalla(
+    "volverPantalla2",
+    "pantalla2"
+  );
+
+  asignarPantalla(
+    "volverPantalla3",
+    "pantalla3"
+  );
+
+  const botonFinalizar =
+    document.getElementById("botonFinalizar");
 
   if (botonFinalizar) {
-    botonFinalizar.addEventListener("click", finalizarPrueba);
+    botonFinalizar.addEventListener(
+      "click",
+      finalizarPrueba
+    );
   }
 }
 
 function asignarPantalla(idBoton, idPantalla) {
-  const boton = document.getElementById(idBoton);
+  const boton =
+    document.getElementById(idBoton);
 
   if (boton) {
     boton.addEventListener("click", () => {
@@ -172,10 +404,16 @@ function asignarPantalla(idBoton, idPantalla) {
 }
 
 function prepararPantallaComentarios() {
-  const bloqueMotivos = document.getElementById("bloqueMotivos");
-  const tituloPantalla4 = document.getElementById("tituloPantalla4");
+  const bloqueMotivos =
+    document.getElementById("bloqueMotivos");
+
+  const tituloPantalla4 =
+    document.getElementById("tituloPantalla4");
+
   const descripcionPantalla4 =
-    document.getElementById("descripcionPantalla4");
+    document.getElementById(
+      "descripcionPantalla4"
+    );
 
   const existeIncidencia =
     respuestas.calificacion <= 3 ||
@@ -183,51 +421,74 @@ function prepararPantallaComentarios() {
     respuestas.pedidoBuenEstado !== "SÍ";
 
   if (bloqueMotivos) {
-    bloqueMotivos.style.display = existeIncidencia
-      ? "block"
-      : "none";
+    bloqueMotivos.style.display =
+      existeIncidencia ? "block" : "none";
   }
 
   if (tituloPantalla4) {
-    tituloPantalla4.innerHTML = existeIncidencia
-      ? "¿Qué podríamos <span>mejorar</span>?"
-      : "¿Deseas dejarnos un <span>comentario</span>?";
+    tituloPantalla4.innerHTML =
+      existeIncidencia
+        ? "¿Qué podríamos <span>mejorar</span>?"
+        : "¿Deseas dejarnos un <span>comentario</span>?";
   }
 
   if (descripcionPantalla4) {
-    descripcionPantalla4.textContent = existeIncidencia
-      ? "Selecciona lo ocurrido y cuéntanos brevemente tu experiencia."
-      : "Tu comentario es opcional y nos ayudará a seguir mejorando.";
+    descripcionPantalla4.textContent =
+      existeIncidencia
+        ? "Selecciona lo ocurrido y cuéntanos brevemente tu experiencia."
+        : "Tu comentario es opcional y nos ayudará a seguir mejorando.";
   }
 }
 
 function finalizarPrueba() {
   mostrarPantalla("pantalla5");
 
-  console.log("Respuestas preparadas:", respuestas);
+  console.log(
+    "Respuestas preparadas:",
+    respuestas
+  );
 }
 
-function marcarSeleccionada(opciones, opcionElegida) {
+function marcarSeleccionada(
+  opciones,
+  opcionElegida
+) {
   opciones.forEach(opcion => {
     opcion.classList.remove("seleccionada");
   });
 
-  opcionElegida.classList.add("seleccionada");
+  opcionElegida.classList.add(
+    "seleccionada"
+  );
 }
 
 function mostrarPantalla(idPantalla) {
-  document.querySelectorAll(".pantalla").forEach(pantalla => {
-    pantalla.classList.remove("activa");
-  });
+  document
+    .querySelectorAll(".pantalla")
+    .forEach(pantalla => {
+      pantalla.classList.remove("activa");
+    });
 
-  const pantallaSeleccionada = document.getElementById(idPantalla);
+  const pantallaSeleccionada =
+    document.getElementById(idPantalla);
 
   if (pantallaSeleccionada) {
-    pantallaSeleccionada.classList.add("activa");
+    pantallaSeleccionada.classList.add(
+      "activa"
+    );
   }
 
   window.scrollTo({
     top: 0,
     behavior: "smooth"
   });
+}
+
+function escaparHTML(texto) {
+  return String(texto || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
