@@ -13,7 +13,7 @@
     body {
       margin: 0;
       min-height: 100vh;
-      padding: 18px;
+      padding: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -22,6 +22,10 @@
         radial-gradient(circle at top, rgba(255, 0, 0, 0.18), transparent 35%),
         linear-gradient(145deg, #050505 0%, #111111 55%, #1a0000 100%);
       color: #ffffff;
+    }
+
+    button {
+      font-family: inherit;
     }
 
     .tarjeta {
@@ -36,7 +40,7 @@
 
     .cabecera {
       position: relative;
-      padding: 28px 22px 24px;
+      padding: 25px 20px 21px;
       text-align: center;
       background:
         linear-gradient(135deg, rgba(255, 0, 0, 0.2), transparent 36%),
@@ -46,17 +50,17 @@
     .cabecera::after {
       content: "";
       position: absolute;
-      left: 0;
       right: 0;
       bottom: -1px;
+      left: 0;
       height: 5px;
       background: linear-gradient(90deg, #ff0000, #ff3b3b, #ff0000);
     }
 
     .simbolo {
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       color: #ff2222;
-      font-size: 54px;
+      font-size: 48px;
       line-height: 1;
       font-weight: 900;
       letter-spacing: -8px;
@@ -66,31 +70,52 @@
     .marca {
       margin: 0;
       color: #ffffff;
-      font-size: 29px;
+      font-size: 28px;
       font-style: italic;
       font-weight: 900;
-      letter-spacing: 0.5px;
     }
 
     .sistema {
-      margin-top: 7px;
+      margin-top: 6px;
       color: #c9c9c9;
-      font-size: 12px;
+      font-size: 11px;
       letter-spacing: 3px;
       text-transform: uppercase;
     }
 
     .moto {
-      margin-top: 20px;
-      font-size: 66px;
+      margin-top: 12px;
+      font-size: 55px;
       filter: drop-shadow(0 8px 12px rgba(255, 0, 0, 0.22));
     }
 
     .contenido {
-      padding: 30px 22px 24px;
+      min-height: 390px;
+      padding: 29px 21px 23px;
       background: #ffffff;
       color: #151515;
       text-align: center;
+    }
+
+    .pantalla {
+      display: none;
+      animation: aparecer 0.28s ease;
+    }
+
+    .pantalla.activa {
+      display: block;
+    }
+
+    @keyframes aparecer {
+      from {
+        opacity: 0;
+        transform: translateX(18px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
     .titulo {
@@ -105,7 +130,7 @@
     }
 
     .descripcion {
-      margin: 0 auto 26px;
+      margin: 0 auto 25px;
       max-width: 350px;
       color: #6b6b6b;
       font-size: 15px;
@@ -133,10 +158,6 @@
         filter 0.16s ease;
     }
 
-    .estrella:hover {
-      transform: translateY(-2px);
-    }
-
     .estrella:active {
       transform: scale(0.88);
     }
@@ -162,7 +183,7 @@
     }
 
     .resultado {
-      min-height: 45px;
+      min-height: 48px;
       margin-top: 12px;
       color: #151515;
       font-size: 17px;
@@ -180,13 +201,73 @@
     .escala {
       display: flex;
       justify-content: space-between;
-      margin-top: 16px;
+      margin-top: 15px;
       color: #8a8a8a;
       font-size: 12px;
     }
 
-    .progreso {
+    .opciones {
+      display: grid;
+      gap: 14px;
       margin-top: 28px;
+    }
+
+    .opcion {
+      width: 100%;
+      min-height: 65px;
+      padding: 14px 18px;
+      border: 2px solid #dddddd;
+      border-radius: 16px;
+      background: #ffffff;
+      color: #252525;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      transition:
+        transform 0.15s ease,
+        border-color 0.15s ease,
+        background 0.15s ease,
+        color 0.15s ease;
+    }
+
+    .opcion:active {
+      transform: scale(0.97);
+    }
+
+    .opcion:hover,
+    .opcion.seleccionada {
+      border-color: #ed1c24;
+      background: #fff1f1;
+      color: #c90000;
+    }
+
+    .icono-opcion {
+      display: inline-block;
+      margin-right: 7px;
+      font-size: 22px;
+    }
+
+    .respuesta-guardada {
+      min-height: 22px;
+      margin-top: 18px;
+      color: #ed1c24;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .volver {
+      margin-top: 21px;
+      border: none;
+      background: transparent;
+      color: #777777;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .progreso {
+      margin-top: 27px;
     }
 
     .barra {
@@ -198,10 +279,18 @@
     }
 
     .avance {
-      width: 20%;
       height: 100%;
       border-radius: inherit;
       background: linear-gradient(90deg, #c90000, #ff2d2d);
+      transition: width 0.3s ease;
+    }
+
+    .avance.paso-1 {
+      width: 20%;
+    }
+
+    .avance.paso-2 {
+      width: 40%;
     }
 
     .texto-progreso {
@@ -214,10 +303,10 @@
       display: flex;
       justify-content: center;
       gap: 18px;
-      padding: 16px 14px;
+      padding: 15px 13px;
       background: #070707;
       color: #d6d6d6;
-      font-size: 12px;
+      font-size: 11px;
       text-align: center;
     }
 
@@ -234,19 +323,20 @@
 
     @media (max-width: 390px) {
       body {
-        padding: 10px;
+        padding: 8px;
       }
 
       .tarjeta {
-        border-radius: 22px;
+        border-radius: 21px;
       }
 
       .cabecera {
-        padding: 24px 16px 20px;
+        padding: 20px 14px 18px;
       }
 
       .contenido {
-        padding: 27px 15px 22px;
+        min-height: 380px;
+        padding: 25px 15px 21px;
       }
 
       .marca {
@@ -254,7 +344,7 @@
       }
 
       .moto {
-        font-size: 58px;
+        font-size: 49px;
       }
 
       .estrella {
@@ -264,56 +354,116 @@
       .titulo {
         font-size: 22px;
       }
-
-      .pie {
-        gap: 8px;
-        font-size: 11px;
-      }
     }
   </style>
 </head>
 
 <body>
   <main class="tarjeta">
-    <section class="cabecera">
+
+    <header class="cabecera">
       <div class="simbolo">≋</div>
       <h1 class="marca">ENVIEXPRESS</h1>
       <div class="sistema">Sistema de Calidad</div>
       <div class="moto" aria-label="Motorizado en moto lineal">🏍️</div>
-    </section>
+    </header>
 
     <section class="contenido">
-      <h2 class="titulo">
-        ¿Cómo fue la <span>atención</span> de nuestro motorizado?
-      </h2>
 
-      <p class="descripcion">
-        Tu opinión nos ayuda a mejorar la calidad de nuestras entregas.
-      </p>
+      <!-- PANTALLA 1 -->
+      <div id="pantalla1" class="pantalla activa">
 
-      <div class="estrellas" aria-label="Calificación de 1 a 5 estrellas">
-        <button class="estrella" type="button" data-valor="1" aria-label="1 estrella">★</button>
-        <button class="estrella" type="button" data-valor="2" aria-label="2 estrellas">★</button>
-        <button class="estrella" type="button" data-valor="3" aria-label="3 estrellas">★</button>
-        <button class="estrella" type="button" data-valor="4" aria-label="4 estrellas">★</button>
-        <button class="estrella" type="button" data-valor="5" aria-label="5 estrellas">★</button>
-      </div>
+        <h2 class="titulo">
+          ¿Cómo fue la <span>atención</span> de nuestro motorizado?
+        </h2>
 
-      <div id="resultado" class="resultado">
-        Selecciona una calificación
-      </div>
+        <p class="descripcion">
+          Tu opinión nos ayuda a mejorar la calidad de nuestras entregas.
+        </p>
 
-      <div class="escala">
-        <span>Muy mala</span>
-        <span>Excelente</span>
-      </div>
-
-      <div class="progreso">
-        <div class="barra">
-          <div class="avance"></div>
+        <div class="estrellas">
+          <button class="estrella" type="button" data-valor="1">★</button>
+          <button class="estrella" type="button" data-valor="2">★</button>
+          <button class="estrella" type="button" data-valor="3">★</button>
+          <button class="estrella" type="button" data-valor="4">★</button>
+          <button class="estrella" type="button" data-valor="5">★</button>
         </div>
-        <div class="texto-progreso">Pregunta 1 de 5</div>
+
+        <div id="resultado" class="resultado">
+          Selecciona una calificación
+        </div>
+
+        <div class="escala">
+          <span>Muy mala</span>
+          <span>Excelente</span>
+        </div>
+
+        <div class="progreso">
+          <div class="barra">
+            <div class="avance paso-1"></div>
+          </div>
+          <div class="texto-progreso">Pregunta 1 de 5</div>
+        </div>
+
       </div>
+
+      <!-- PANTALLA 2 -->
+      <div id="pantalla2" class="pantalla">
+
+        <h2 class="titulo">
+          ¿El motorizado fue <span>amable y respetuoso</span>?
+        </h2>
+
+        <p class="descripcion">
+          Selecciona la opción que mejor describa la atención recibida.
+        </p>
+
+        <div class="opciones">
+
+          <button
+            class="opcion"
+            type="button"
+            data-trato="SÍ"
+          >
+            <span class="icono-opcion">😊</span>
+            Sí, fue amable
+          </button>
+
+          <button
+            class="opcion"
+            type="button"
+            data-trato="REGULAR"
+          >
+            <span class="icono-opcion">😐</span>
+            La atención fue regular
+          </button>
+
+          <button
+            class="opcion"
+            type="button"
+            data-trato="NO"
+          >
+            <span class="icono-opcion">😕</span>
+            No fue amable
+          </button>
+
+        </div>
+
+        <div id="respuestaGuardada" class="respuesta-guardada"></div>
+
+        <button id="volverPantalla1" class="volver" type="button">
+          ← Cambiar mi calificación anterior
+        </button>
+
+        <div class="progreso">
+          <div class="barra">
+            <div class="avance paso-2"></div>
+          </div>
+          <div class="texto-progreso">Pregunta 2 de 5</div>
+        </div>
+
+      </div>
+
     </section>
 
     <footer class="pie">
@@ -327,11 +477,25 @@
         Nos ayuda a mejorar
       </div>
     </footer>
+
   </main>
 
   <script>
+    let calificacion = 0;
+    let tratoAmable = '';
+
+    const pantalla1 = document.getElementById('pantalla1');
+    const pantalla2 = document.getElementById('pantalla2');
+
     const estrellas = document.querySelectorAll('.estrella');
     const resultado = document.getElementById('resultado');
+
+    const opcionesTrato = document.querySelectorAll('[data-trato]');
+    const respuestaGuardada =
+      document.getElementById('respuestaGuardada');
+
+    const volverPantalla1 =
+      document.getElementById('volverPantalla1');
 
     const mensajes = {
       1: {
@@ -358,25 +522,61 @@
 
     estrellas.forEach(estrella => {
       estrella.addEventListener('click', () => {
-        const valor = Number(estrella.dataset.valor);
+        calificacion = Number(estrella.dataset.valor);
 
         estrellas.forEach(item => {
           const valorItem = Number(item.dataset.valor);
 
           item.classList.remove('activa');
 
-          if (valorItem <= valor) {
+          if (valorItem <= calificacion) {
             void item.offsetWidth;
             item.classList.add('activa');
           }
         });
 
         resultado.innerHTML = `
-          ${mensajes[valor].titulo}
-          <span>${mensajes[valor].detalle}</span>
+          ${mensajes[calificacion].titulo}
+          <span>${mensajes[calificacion].detalle}</span>
         `;
+
+        setTimeout(() => {
+          mostrarPantalla(pantalla2);
+        }, 750);
       });
     });
+
+    opcionesTrato.forEach(opcion => {
+      opcion.addEventListener('click', () => {
+        tratoAmable = opcion.dataset.trato;
+
+        opcionesTrato.forEach(item => {
+          item.classList.remove('seleccionada');
+        });
+
+        opcion.classList.add('seleccionada');
+
+        respuestaGuardada.textContent =
+          '✓ Respuesta registrada. Pantalla 2 funcionando correctamente.';
+      });
+    });
+
+    volverPantalla1.addEventListener('click', () => {
+      mostrarPantalla(pantalla1);
+    });
+
+    function mostrarPantalla(pantallaSeleccionada) {
+      document.querySelectorAll('.pantalla').forEach(pantalla => {
+        pantalla.classList.remove('activa');
+      });
+
+      pantallaSeleccionada.classList.add('activa');
+
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
   </script>
 </body>
 </html>
