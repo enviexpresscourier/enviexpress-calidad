@@ -85,54 +85,54 @@ function obtenerCodigoOrden() {
 
 function validarPedidoEnAPI(codigoOrden) {
   return new Promise((resolve, reject) => {
-    const nombreCallback =
-      "respuestaEnviquality_" +
-      Date.now() +
-      "_" +
-      Math.floor(Math.random() * 100000);
+    const scriptAnterior =
+      document.getElementById("conexionEnviquality");
 
-    const script = document.createElement("script");
-
-    const temporizador = setTimeout(() => {
-      limpiar();
-      reject(
-        new Error("La API tardó demasiado en responder.")
-      );
-    }, 12000);
-
-    function limpiar() {
-      clearTimeout(temporizador);
-      script.remove();
-
-      try {
-        delete window[nombreCallback];
-      } catch (error) {
-        window[nombreCallback] = undefined;
-      }
+    if (scriptAnterior) {
+      scriptAnterior.remove();
     }
 
-    window[nombreCallback] = resultado => {
-      limpiar();
+    const temporizador = setTimeout(() => {
+      limpiarConexion();
+      reject(new Error("La API tardó demasiado en responder."));
+    }, 15000);
+
+    window.respuestaEnviquality = function(resultado) {
+      clearTimeout(temporizador);
+      limpiarConexion();
       resolve(resultado);
     };
 
-    script.onerror = () => {
-      limpiar();
-      reject(
-        new Error("No fue posible conectarse con la API.")
-      );
+    const script = document.createElement("script");
+
+    script.id = "conexionEnviquality";
+
+    script.onerror = function() {
+      clearTimeout(temporizador);
+      limpiarConexion();
+      reject(new Error("No se pudo cargar la respuesta de la API."));
     };
 
     const parametros = new URLSearchParams({
       action: "validar",
       id: codigoOrden,
-      callback: nombreCallback
+      callback: "respuestaEnviquality",
+      _: Date.now().toString()
     });
 
-    script.src = `${API_URL}?${parametros.toString()}`;
+    script.src = API_URL + "?" + parametros.toString();
 
     document.body.appendChild(script);
   });
+}
+
+function limpiarConexion() {
+  const script =
+    document.getElementById("conexionEnviquality");
+
+  if (script) {
+    script.remove();
+  }
 }
 
 function mostrarMensajeCargando() {
