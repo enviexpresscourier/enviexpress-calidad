@@ -441,12 +441,100 @@ function prepararPantallaComentarios() {
 }
 
 function finalizarPrueba() {
-  mostrarPantalla("pantalla5");
+  const boton =
+    document.getElementById("botonFinalizar");
 
-  console.log(
-    "Respuestas preparadas:",
-    respuestas
+  if (boton) {
+    boton.disabled = true;
+    boton.textContent = "Enviando opinión...";
+  }
+
+  respuestas.comentario =
+    document.getElementById("comentario")?.value.trim() || "";
+
+  enviarRespuestaGoogleForms();
+}
+
+function enviarRespuestaGoogleForms() {
+  const FORM_URL =
+    "https://docs.google.com/forms/d/e/1FAIpQLScSaPjVS_bvHjMNQbvmtvZ4AyMICT5ji2dnMPrJD4JPtei-Bg/formResponse";
+
+  const iframe = document.createElement("iframe");
+
+  iframe.name = "respuestaOcultaEnviquality";
+  iframe.style.display = "none";
+
+  document.body.appendChild(iframe);
+
+  const formulario = document.createElement("form");
+
+  formulario.method = "POST";
+  formulario.action = FORM_URL;
+  formulario.target = "respuestaOcultaEnviquality";
+  formulario.style.display = "none";
+
+  agregarCampoFormulario(
+    formulario,
+    "entry.516474221",
+    respuestas.codigoOrden
   );
+
+  agregarCampoFormulario(
+    formulario,
+    "entry.1462128974",
+    respuestas.calificacion
+  );
+
+  agregarCampoFormulario(
+    formulario,
+    "entry.254599261",
+    respuestas.tratoAmable
+  );
+
+  agregarCampoFormulario(
+    formulario,
+    "entry.481977381",
+    respuestas.pedidoBuenEstado
+  );
+
+  agregarCampoFormulario(
+    formulario,
+    "entry.1661898165",
+    respuestas.motivos.length
+      ? respuestas.motivos.join(", ")
+      : "NINGUNO"
+  );
+
+  agregarCampoFormulario(
+    formulario,
+    "entry.46543082",
+    respuestas.comentario
+  );
+
+  document.body.appendChild(formulario);
+
+  formulario.submit();
+
+  setTimeout(() => {
+    formulario.remove();
+    iframe.remove();
+
+    mostrarPantalla("pantalla5");
+  }, 1200);
+}
+
+function agregarCampoFormulario(
+  formulario,
+  nombre,
+  valor
+) {
+  const campo = document.createElement("input");
+
+  campo.type = "hidden";
+  campo.name = nombre;
+  campo.value = valor ?? "";
+
+  formulario.appendChild(campo);
 }
 
 function marcarSeleccionada(
