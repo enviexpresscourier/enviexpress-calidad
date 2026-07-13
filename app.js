@@ -38,6 +38,25 @@ function obtenerCodigoOrden() {
 
   respuestas.codigoOrden =
     (parametros.get("id") || "").trim();
+  const nombreCliente =
+  (parametros.get("c") || "Cliente").trim();
+
+const nombreMotorizado =
+  (parametros.get("m") || "Motorizado ENVIEXPRESS").trim();
+
+const nombreClienteVisible =
+  document.getElementById("nombreClienteVisible");
+
+const nombreMotorizadoVisible =
+  document.getElementById("nombreMotorizadoVisible");
+
+if (nombreClienteVisible) {
+  nombreClienteVisible.textContent = nombreCliente;
+}
+
+if (nombreMotorizadoVisible) {
+  nombreMotorizadoVisible.textContent = nombreMotorizado;
+}
 
   const codigoVisible =
     document.getElementById("codigoOrdenVisible");
