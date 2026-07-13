@@ -12,7 +12,7 @@ const respuestas = {
 
 document.addEventListener("DOMContentLoaded", iniciarEncuesta);
 
-async function iniciarEncuesta() {
+function iniciarEncuesta() {
   obtenerCodigoOrden();
 
   if (!respuestas.codigoOrden) {
@@ -23,47 +23,12 @@ async function iniciarEncuesta() {
     return;
   }
 
-  mostrarMensajeCargando();
-
-  try {
-    const resultado = await validarPedidoEnAPI(
-      respuestas.codigoOrden
-    );
-
-    if (!resultado || !resultado.valido) {
-      mostrarMensajePedido(
-        "Pedido no encontrado",
-        resultado?.mensaje ||
-          "No encontramos el pedido asociado a este enlace."
-      );
-      return;
-    }
-
-    respuestas.codigoOrden = resultado.codigoOrden;
-
-    const codigoVisible =
-      document.getElementById("codigoOrdenVisible");
-
-    if (codigoVisible) {
-      codigoVisible.textContent = resultado.codigoOrden;
-    }
-
-    restaurarEncuesta();
-    configurarEstrellas();
-    configurarTrato();
-    configurarEstadoPedido();
-    configurarMotivos();
-    configurarComentario();
-    configurarBotones();
-
-  } catch (error) {
-    mostrarMensajePedido(
-      "No pudimos cargar la encuesta",
-      "Revisa tu conexión e inténtalo nuevamente."
-    );
-
-    console.error(error);
-  }
+  configurarEstrellas();
+  configurarTrato();
+  configurarEstadoPedido();
+  configurarMotivos();
+  configurarComentario();
+  configurarBotones();
 }
 
 function obtenerCodigoOrden() {
@@ -462,6 +427,7 @@ function enviarRespuestaGoogleForms() {
   const iframe = document.createElement("iframe");
 
   iframe.name = "respuestaOcultaEnviquality";
+  iframe.id = "respuestaOcultaEnviquality";
   iframe.style.display = "none";
 
   document.body.appendChild(iframe);
@@ -508,19 +474,44 @@ function enviarRespuestaGoogleForms() {
   agregarCampoFormulario(
     formulario,
     "entry.46543082",
-    respuestas.comentario
+    respuestas.comentario || ""
   );
 
   document.body.appendChild(formulario);
 
+  let enviado = false;
+
+  iframe.addEventListener("load", () => {
+    if (!enviado) {
+      return;
+    }
+
+    formulario.remove();
+
+    const boton =
+      document.getElementById("botonFinalizar");
+
+    if (boton) {
+      boton.disabled = false;
+      boton.textContent = "Finalizar encuesta";
+    }
+
+    mostrarPantalla("pantalla5");
+  });
+
+  enviado = true;
   formulario.submit();
 
   setTimeout(() => {
-    formulario.remove();
-    iframe.remove();
-
-    mostrarPantalla("pantalla5");
-  }, 1200);
+    if (
+      document.getElementById("pantalla5") &&
+      !document
+        .getElementById("pantalla5")
+        .classList.contains("activa")
+    ) {
+      mostrarPantalla("pantalla5");
+    }
+  }, 6000);
 }
 
 function agregarCampoFormulario(
