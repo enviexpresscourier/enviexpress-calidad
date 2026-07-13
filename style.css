@@ -443,3 +443,65 @@ textarea {
     font-size: 22px;
   }
 }
+
+
+.cabecera-personalizada {
+  padding: 28px 22px 26px;
+}
+
+.logo-texto {
+  color: #ffffff;
+  font-size: 30px;
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: 0.6px;
+}
+
+.saludo-cliente {
+  margin-top: 20px;
+  color: #ffffff;
+  font-size: 23px;
+  line-height: 1.35;
+}
+
+.saludo-cliente strong {
+  color: #ff2d2d;
+}
+
+.texto-entrega {
+  margin-top: 14px;
+  color: #cfcfcf;
+  font-size: 14px;
+}
+
+.motorizado-destacado {
+  display: inline-flex;
+  margin-top: 10px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 11px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  font-size: 18px;
+}
+
+.icono-motorizado {
+  font-size: 27px;
+}
+
+@media (max-width: 390px) {
+  .logo-texto {
+    font-size: 26px;
+  }
+
+  .saludo-cliente {
+    font-size: 21px;
+  }
+
+  .motorizado-destacado {
+    font-size: 16px;
+  }
+}
