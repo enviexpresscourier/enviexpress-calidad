@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Testimonios ENVIEXPRESS</title>
+  <title>Testimonios | ENVIEXPRESS</title>
 
   <link rel="stylesheet" href="style.css">
 
@@ -15,28 +15,35 @@
 
     .contenedor-testimonios {
       width: 100%;
-      max-width: 520px;
+      max-width: 540px;
       margin: 0 auto;
-      padding: 25px 12px 50px;
+      padding: 28px 12px 60px;
     }
 
     .cabecera-testimonios {
-      margin-bottom: 24px;
+      margin-bottom: 28px;
       text-align: center;
     }
 
-    .cabecera-testimonios h1 {
+    .marca-testimonios {
       margin: 0;
       color: #ffffff;
-      font-size: 28px;
+      font-size: 30px;
       font-style: italic;
       font-weight: 900;
     }
 
-    .cabecera-testimonios p {
+    .subtitulo-testimonios {
       margin: 8px 0 0;
-      color: #d1d1d1;
+      color: #cfcfcf;
       font-size: 14px;
+    }
+
+    .titulo-seccion {
+      margin: 0 0 23px;
+      color: #ffffff;
+      text-align: center;
+      font-size: 22px;
     }
 
     .testimonio {
@@ -49,10 +56,10 @@
     }
 
     .estrellas-testimonio {
-      margin-bottom: 14px;
+      margin-bottom: 15px;
       color: #ed1c24;
       font-size: 27px;
-      letter-spacing: 3px;
+      letter-spacing: 2px;
     }
 
     .comentario-testimonio {
@@ -66,35 +73,51 @@
     .pie-testimonio {
       display: flex;
       margin-top: 20px;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
       padding-top: 15px;
       border-top: 1px solid #eeeeee;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
     }
 
     .cliente-testimonio {
-      color: #777777;
-      font-size: 13px;
+      color: #555555;
+      font-size: 14px;
+      font-weight: 700;
     }
 
-    .marca-testimonio {
-      color: #ed1c24;
-      font-size: 13px;
-      font-weight: 900;
-    }
-
-    .verificado {
-      margin-top: 7px;
+    .fecha-testimonio {
+      margin-top: 4px;
       color: #999999;
       font-size: 11px;
     }
 
-    .titulo-seccion {
-      margin: 0 0 20px;
-      color: #ffffff;
+    .verificado {
+      margin-top: 5px;
+      color: #888888;
+      font-size: 11px;
+    }
+
+    .enviquality {
+      color: #ed1c24;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .cargando {
+      padding: 35px 15px;
+      border-radius: 20px;
+      background: #ffffff;
+      color: #555555;
       text-align: center;
-      font-size: 22px;
+    }
+
+    .sin-testimonios {
+      padding: 30px;
+      border-radius: 20px;
+      background: #ffffff;
+      color: #555555;
+      text-align: center;
     }
   </style>
 </head>
@@ -104,99 +127,285 @@
   <main class="contenedor-testimonios">
 
     <header class="cabecera-testimonios">
-      <h1>ENVIEXPRESS</h1>
-      <p>Experiencias de nuestros clientes</p>
+      <h1 class="marca-testimonios">
+        ENVIEXPRESS
+      </h1>
+
+      <p class="subtitulo-testimonios">
+        Experiencias reales de nuestros clientes
+      </p>
     </header>
 
     <h2 class="titulo-seccion">
       ⭐ Lo que dicen de nuestro servicio
     </h2>
 
-    <!-- TESTIMONIO 1 -->
-    <article class="testimonio">
-      <div class="estrellas-testimonio">
-        ★★★★★
+    <div id="listaTestimonios">
+      <div class="cargando">
+        Cargando testimonios...
       </div>
-
-      <p class="comentario-testimonio">
-        Excelente servicio, el motorizado fue muy amable y respetuoso.
-        Todo llegó correctamente.
-      </p>
-
-      <div class="pie-testimonio">
-        <div>
-          <div class="cliente-testimonio">
-            Cliente ENVIEXPRESS
-          </div>
-
-          <div class="verificado">
-            ✓ Experiencia verificada
-          </div>
-        </div>
-
-        <div class="marca-testimonio">
-          ENVIQUALITY
-        </div>
-      </div>
-    </article>
-
-    <!-- TESTIMONIO 2 -->
-    <article class="testimonio">
-      <div class="estrellas-testimonio">
-        ★★★★★
-      </div>
-
-      <p class="comentario-testimonio">
-        Muy buena atención. La entrega fue rápida y el motorizado
-        se comunicó correctamente conmigo.
-      </p>
-
-      <div class="pie-testimonio">
-        <div>
-          <div class="cliente-testimonio">
-            Cliente ENVIEXPRESS
-          </div>
-
-          <div class="verificado">
-            ✓ Experiencia verificada
-          </div>
-        </div>
-
-        <div class="marca-testimonio">
-          ENVIQUALITY
-        </div>
-      </div>
-    </article>
-
-    <!-- TESTIMONIO 3 -->
-    <article class="testimonio">
-      <div class="estrellas-testimonio">
-        ★★★★★
-      </div>
-
-      <p class="comentario-testimonio">
-        Todo perfecto. Muy amable el motorizado y mi pedido llegó
-        en excelente estado.
-      </p>
-
-      <div class="pie-testimonio">
-        <div>
-          <div class="cliente-testimonio">
-            Cliente ENVIEXPRESS
-          </div>
-
-          <div class="verificado">
-            ✓ Experiencia verificada
-          </div>
-        </div>
-
-        <div class="marca-testimonio">
-          ENVIQUALITY
-        </div>
-      </div>
-    </article>
+    </div>
 
   </main>
+
+  <script>
+    const URL_CSV =
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vQRGcMHslMf65wySy_0mwyjqWz33-DhXJG1RcKeqKY6ccOEQpUUCFRhenQxPdCB2_UmQ0mnKE4eV8XR/pub?gid=1015173778&single=true&output=csv";
+
+    async function cargarTestimonios() {
+      const contenedor =
+        document.getElementById("listaTestimonios");
+
+      try {
+        const respuesta = await fetch(
+          URL_CSV + "&v=" + Date.now()
+        );
+
+        if (!respuesta.ok) {
+          throw new Error(
+            "No se pudieron cargar los testimonios."
+          );
+        }
+
+        const texto = await respuesta.text();
+
+        const filas = convertirCSV(texto);
+
+        if (filas.length <= 1) {
+          mostrarSinTestimonios();
+          return;
+        }
+
+        // Quitamos la fila de encabezados.
+        const testimonios = filas
+          .slice(1)
+          .filter(fila => {
+            const calificacion =
+              String(fila[0] || "").trim();
+
+            const comentario =
+              String(fila[1] || "").trim();
+
+            return (
+              calificacion === "5" &&
+              comentario !== ""
+            );
+          })
+          .reverse();
+
+        if (testimonios.length === 0) {
+          mostrarSinTestimonios();
+          return;
+        }
+
+        contenedor.innerHTML = "";
+
+        testimonios.forEach(fila => {
+          const calificacion =
+            String(fila[0] || "5").trim();
+
+          const comentario =
+            String(fila[1] || "").trim();
+
+          const cliente =
+            obtenerPrimerNombre(
+              String(fila[2] || "Cliente").trim()
+            );
+
+          const fecha =
+            String(fila[3] || "").trim();
+
+          const tarjeta =
+            crearTarjetaTestimonio(
+              calificacion,
+              comentario,
+              cliente,
+              fecha
+            );
+
+          contenedor.appendChild(tarjeta);
+        });
+
+      } catch (error) {
+        console.error(error);
+
+        contenedor.innerHTML = `
+          <div class="sin-testimonios">
+            No pudimos cargar los testimonios
+            en este momento.
+          </div>
+        `;
+      }
+    }
+
+    function crearTarjetaTestimonio(
+      calificacion,
+      comentario,
+      cliente,
+      fecha
+    ) {
+      const articulo =
+        document.createElement("article");
+
+      articulo.className = "testimonio";
+
+      const estrellas =
+        "★".repeat(
+          Math.min(
+            5,
+            Math.max(
+              1,
+              Number(calificacion) || 5
+            )
+          )
+        );
+
+      articulo.innerHTML = `
+        <div class="estrellas-testimonio">
+          ${estrellas}
+        </div>
+
+        <p class="comentario-testimonio">
+          “${escaparHTML(comentario)}”
+        </p>
+
+        <div class="pie-testimonio">
+          <div>
+            <div class="cliente-testimonio">
+              — ${escaparHTML(cliente)}
+            </div>
+
+            <div class="verificado">
+              ✓ Experiencia verificada
+            </div>
+
+            ${
+              fecha
+                ? `
+                  <div class="fecha-testimonio">
+                    ${escaparHTML(fecha)}
+                  </div>
+                `
+                : ""
+            }
+          </div>
+
+          <div class="enviquality">
+            ENVIQUALITY
+          </div>
+        </div>
+      `;
+
+      return articulo;
+    }
+
+    function obtenerPrimerNombre(nombre) {
+      return (
+        nombre
+          .trim()
+          .split(/\s+/)[0] ||
+        "Cliente"
+      );
+    }
+
+    function convertirCSV(texto) {
+      const filas = [];
+
+      let fila = [];
+      let campo = "";
+      let dentroDeComillas = false;
+
+      for (
+        let i = 0;
+        i < texto.length;
+        i++
+      ) {
+        const caracter = texto[i];
+        const siguiente = texto[i + 1];
+
+        if (caracter === '"') {
+          if (
+            dentroDeComillas &&
+            siguiente === '"'
+          ) {
+            campo += '"';
+            i++;
+          } else {
+            dentroDeComillas =
+              !dentroDeComillas;
+          }
+
+        } else if (
+          caracter === "," &&
+          !dentroDeComillas
+        ) {
+          fila.push(campo);
+          campo = "";
+
+        } else if (
+          (caracter === "\n" ||
+           caracter === "\r") &&
+          !dentroDeComillas
+        ) {
+          if (
+            caracter === "\r" &&
+            siguiente === "\n"
+          ) {
+            i++;
+          }
+
+          fila.push(campo);
+
+          if (
+            fila.some(valor =>
+              String(valor).trim() !== ""
+            )
+          ) {
+            filas.push(fila);
+          }
+
+          fila = [];
+          campo = "";
+
+        } else {
+          campo += caracter;
+        }
+      }
+
+      fila.push(campo);
+
+      if (
+        fila.some(valor =>
+          String(valor).trim() !== ""
+        )
+      ) {
+        filas.push(fila);
+      }
+
+      return filas;
+    }
+
+    function mostrarSinTestimonios() {
+      document.getElementById(
+        "listaTestimonios"
+      ).innerHTML = `
+        <div class="sin-testimonios">
+          Aún no hay testimonios disponibles.
+        </div>
+      `;
+    }
+
+    function escaparHTML(texto) {
+      return String(texto || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    cargarTestimonios();
+  </script>
 
 </body>
 </html>
